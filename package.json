@@ -1,17 +1,23 @@
 {
-  "name": "dot-storage",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "jest": "^29.7.0"
-  }
+	"name": "dot-storage",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "npx jest --coverage --verbose "
+	},
+	"author": "",
+	"license": "MIT",
+	"devDependencies": {
+		"@babel/core": "^7.23.9",
+		"@babel/preset-env": "^7.23.9",
+		"@babel/preset-typescript": "^7.23.3",
+		"@types/jest": "^29.5.11",
+		"babel-jest": "^29.7.0",
+		"typescript": "^5.3.3"
+	},
+	"dependencies": {
+		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0"
+	}
 }
