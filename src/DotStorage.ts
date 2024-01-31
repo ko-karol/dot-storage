@@ -7,9 +7,17 @@ export default class DotStorage<T> {
 		storage: Storage,
 		{ storageKey, value }: { storageKey: string; value: T }
 	) {
-		this.setStorageKey(storageKey!);
-		this.setStorageType(storage!);
-		this.setValue(value!);
+		this.setStorageKey(storageKey);
+		this.setStorageType(storage);
+		this.setValue(value);
+	}
+
+	setValue(value: T): void {
+		if (value === undefined || value === null) {
+			throw new Error("Value cannot be null or undefined");
+		}
+
+		this.value = value;
 	}
 
 	retrieveValue(): T | null {
@@ -22,6 +30,7 @@ export default class DotStorage<T> {
 
 			return JSON.parse(item);
 		} catch (error) {
+			console.error(error);
 			return null;
 		}
 	}
@@ -49,12 +58,5 @@ export default class DotStorage<T> {
 		}
 
 		this.storageKey = storageKey;
-	}
-	private setValue(value: T): void {
-		if (value === undefined || value === null) {
-			throw new Error("Value cannot be null or undefined");
-		}
-
-		this.value = value;
 	}
 }
