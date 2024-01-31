@@ -8,7 +8,7 @@ export default class DotStorage<T> {
 		{ storageKey, value }: { storageKey: string; value: T }
 	) {
 		this.setStorageKey(storageKey!);
-		this.setStorage(storage!);
+		this.setStorageType(storage!);
 		this.setValue(value!);
 	}
 
@@ -35,7 +35,7 @@ export default class DotStorage<T> {
 		this.storage.setItem(this.storageKey, JSON.stringify(this.value));
 	}
 
-	private setStorage(storage: Storage): void {
+	private setStorageType(storage: Storage): void {
 		if (storage === undefined || storage === null) {
 			throw new Error("Storage definition is required");
 		}
