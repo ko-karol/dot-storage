@@ -1,62 +1,66 @@
-export default class DotStorage<T> {
-	private storage: Storage;
-	private storageKey: string;
+import IDotStorage, { Options } from "./types/types";
+import retrieve from "./retrieve";
+
+export default class DotStorage<T> implements IDotStorage<T> {
 	private value: T;
+	private storageKey: string;
+	private storage: Storage;
+	private options: Options;
 
 	constructor(
+		value: T,
+		storageKey: string,
 		storage: Storage,
-		{ storageKey, value }: { storageKey: string; value: T }
+		options?: Options
 	) {
+		this.setValue(value);
 		this.setStorageKey(storageKey);
 		this.setStorageType(storage);
+		this.setOptions(options);
+	}
+
+	set newValue(value: T) {
 		this.setValue(value);
+		this.store();
 	}
 
-	setValue(value: T): void {
-		if (value === undefined || value === null) {
-			throw new Error("Value cannot be null or undefined");
-		}
-
-		this.value = value;
+	set newOptions(options: Options) {
+		const combinedOptions = { ...this.options, ...options };
+		this.setOptions(combinedOptions);
+		this.store();
 	}
 
-	retrieveValue(): T | null {
-		try {
-			const { storageKey, storage } = this;
-			const item = storage.getItem(storageKey);
-			if (!item) {
-				throw new Error("Couldn't retrieve value from key:" + storageKey);
-			}
-
-			return JSON.parse(item);
-		} catch (error) {
-			console.error(error);
-			return null;
-		}
+	retrieve(): T | null {
+		return retrieve(this.storage, this.storageKey);
 	}
 
-	//remove value should completely remove the variable too
-	removeValue(): void {
-		this.storage.removeItem(this.storageKey);
-	}
-
-	storeValue(): void {
+	store(): void {
 		this.storage.setItem(this.storageKey, JSON.stringify(this.value));
 	}
 
-	private setStorageType(storage: Storage): void {
-		if (storage === undefined || storage === null) {
-			throw new Error("Storage definition is required");
-		}
+	clear(): void {
+		this.storage.removeItem(this.storageKey);
+	}
 
-		this.storage = storage;
+	private setValue(value: T): void {
+		if (value) {
+			this.value = value;
+		} else throw new Error("Value cannot be null or undefined");
 	}
 
 	private setStorageKey(storageKey: string): void {
-		if (storageKey === undefined || storageKey === null) {
-			throw new Error("StorageKey cannot be null or undefined");
-		}
+		if (storageKey) {
+			this.storageKey = storageKey;
+		} else throw new Error("Storage key cannot be null or undefined");
+	}
 
-		this.storageKey = storageKey;
+	private setStorageType(storage: Storage): void {
+		if (storage) {
+			this.storage = storage;
+		} else throw new Error("Storage cannot be null or undefined");
+	}
+
+	private setOptions(options: Options = {}): void {
+		this.options = options;
 	}
 }
