@@ -1,66 +1,47 @@
-import IDotStorage, { Options } from "./types/types";
-import retrieve from "./retrieve";
+import IDotStorage from "./types/IDotStorage";
+import IOptions from "./types/IOptions";
 
-export default class DotStorage<T> implements IDotStorage<T> {
-	private value: T;
-	private storageKey: string;
-	private storage: Storage;
-	private options: Options;
+import StorageManager from "./StorageManager";
+import OptionsManager from "./OptionsManager";
+import ValueManager from "./ValueManager";
+
+export default class DotStorage<Input> implements IDotStorage<Input> {
+	private _value: ValueManager<Input>;
+	private _storage: StorageManager<Input>;
+	private _options: OptionsManager;
 
 	constructor(
-		value: T,
+		value: Input,
 		storageKey: string,
 		storage: Storage,
-		options?: Options
+		options?: IOptions
 	) {
-		this.setValue(value);
-		this.setStorageKey(storageKey);
-		this.setStorageType(storage);
-		this.setOptions(options);
-	}
-
-	set newValue(value: T) {
-		this.setValue(value);
+		this._storage = new StorageManager(storage, storageKey);
+		this._options = new OptionsManager(options);
+		this._value = new ValueManager(value);
 		this.store();
 	}
 
-	set newOptions(options: Options) {
-		const combinedOptions = { ...this.options, ...options };
-		this.setOptions(combinedOptions);
+	public set value(value: Input) {
+		this._value.setValue(value);
 		this.store();
 	}
 
-	retrieve(): T | null {
-		return retrieve(this.storage, this.storageKey);
+	public set options(options: IOptions) {
+		const combinedOptions = { ...this._options, ...options };
+		this._options.setOptions(combinedOptions);
+		this.store();
 	}
 
-	store(): void {
-		this.storage.setItem(this.storageKey, JSON.stringify(this.value));
-	}
+	public retrieve = (): Input | null => {
+		return this._storage.retrieveData();
+	};
 
-	clear(): void {
-		this.storage.removeItem(this.storageKey);
-	}
+	public store = (): void => {
+		this._storage.storeData(this._value.value);
+	};
 
-	private setValue(value: T): void {
-		if (value) {
-			this.value = value;
-		} else throw new Error("Value cannot be null or undefined");
-	}
-
-	private setStorageKey(storageKey: string): void {
-		if (storageKey) {
-			this.storageKey = storageKey;
-		} else throw new Error("Storage key cannot be null or undefined");
-	}
-
-	private setStorageType(storage: Storage): void {
-		if (storage) {
-			this.storage = storage;
-		} else throw new Error("Storage cannot be null or undefined");
-	}
-
-	private setOptions(options: Options = {}): void {
-		this.options = options;
-	}
+	public clear = (): void => {
+		this._storage.clearData();
+	};
 }

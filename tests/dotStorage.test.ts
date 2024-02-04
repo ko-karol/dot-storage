@@ -1,52 +1,42 @@
-/**
- * @jest-environment jsdom
- */
-
 import DotStorage from "../src/DotStorage";
 
 describe("DotStorage", () => {
-	let storage = window.localStorage;
-	let storageKey = "testKey";
-	let value = { test: "value" };
-	let dotStorage: DotStorage<{ test: string }>;
+	let storage: DotStorage<number>;
+	let mockStorage: Storage;
+	const storageKey = "testKey";
+	const value = 42;
+	const options = { namespace: "value1", expiresAt: Date.now() + 1000 };
 
 	beforeEach(() => {
+		mockStorage = {
+			setItem: jest.fn(),
+			removeItem: jest.fn(),
+			getItem: jest.fn().mockReturnValue(JSON.stringify(value)),
+		} as any;
+		storage = new DotStorage(value, storageKey, mockStorage, options);
+	});
+
+	it("should store value in storage", () => {
+		storage.newValue = 43;
+		expect(mockStorage.setItem).toHaveBeenCalledWith(
+			storageKey,
+			JSON.stringify(43)
+		);
+	});
+
+	it("should combine and set new options", () => {
+		const newOptions = { namespace: "value2", expiresAt: Date.now() + 2000 };
+		storage.newOptions = newOptions;
+		expect(storage["options"]).toEqual({ ...options, ...newOptions });
+	});
+
+	it("should clear value from storage", () => {
 		storage.clear();
-		if (storage === window.localStorage) {
-			storage = window.sessionStorage;
-		} else storage = window.localStorage;
-
-		dotStorage = new DotStorage(storage, { storageKey, value });
+		expect(mockStorage.removeItem).toHaveBeenCalledWith(storageKey);
 	});
 
-	it("should retrieve the same value from storage", () => {
-		dotStorage.storeValue();
-		const retrievedValue = dotStorage.retrieveValue();
+	it("should retrieve stored value from storage", () => {
+		const retrievedValue = storage.retrieve();
 		expect(retrievedValue).toEqual(value);
-	});
-
-	it("should remove the value from storage", () => {
-		dotStorage.storeValue();
-		dotStorage.removeValue();
-		const retrievedValue = dotStorage.retrieveValue();
-		expect(retrievedValue).toBeNull();
-	});
-
-	it("should throw an error if storage is not defined", () => {
-		expect(() => {
-			dotStorage = new DotStorage(undefined, { storageKey, value });
-		}).toThrow(Error);
-	});
-
-	it("should throw an error if storageKey is not defined", () => {
-		expect(() => {
-			dotStorage = new DotStorage(storage, { storageKey: undefined, value });
-		}).toThrow(Error);
-	});
-
-	it("should throw an error if value is not defined", () => {
-		expect(() => {
-			dotStorage = new DotStorage(storage, { storageKey, value: undefined });
-		}).toThrow(Error);
 	});
 });
