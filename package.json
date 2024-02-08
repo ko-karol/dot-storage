@@ -2,7 +2,7 @@
 	"name": "dot-storage",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "DotStorage.ts",
 	"scripts": {
 		"test": "npx jest --coverage --verbose "
 	},
@@ -12,12 +12,11 @@
 		"@babel/core": "^7.23.9",
 		"@babel/preset-env": "^7.23.9",
 		"@babel/preset-typescript": "^7.23.3",
+		"@rollup/plugin-typescript": "^11.1.6",
 		"@types/jest": "^29.5.11",
 		"babel-jest": "^29.7.0",
-		"typescript": "^5.3.3"
-	},
-	"dependencies": {
 		"jest": "^29.7.0",
-		"jest-environment-jsdom": "^29.7.0"
+		"jest-environment-jsdom": "^29.7.0",
+		"typescript": "^5.3.3"
 	}
 }

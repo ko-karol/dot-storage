@@ -1,0 +1,16 @@
+{
+	"include": [
+		"src/**/*",
+		"tests/**/*",
+	],
+	"compilerOptions": {
+		"lib": [
+			"esnext"
+		],
+		"target": "esnext",
+		"esModuleInterop": true,
+		"removeComments": true,
+		"noImplicitReturns": true,
+		"strict": true,
+	}
+}
