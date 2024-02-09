@@ -5,11 +5,13 @@
 	],
 	"compilerOptions": {
 		"lib": [
-			"esnext"
+			"ESNext",
+			"DOM"
 		],
-		"target": "esnext",
+		"target": "ESNext",
 		"esModuleInterop": true,
 		"removeComments": true,
+		"diagnostics": true,
 		"noImplicitReturns": true,
 		"strict": true,
 	}
