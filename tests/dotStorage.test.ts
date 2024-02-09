@@ -1,7 +1,7 @@
-import DotStorage from "../src/DotStorage";
+import DotStorage, { IDotStorage } from "../src/DotStorage";
 
 describe("DotStorage", () => {
-	let storage: DotStorage<number>;
+	let storage: IDotStorage<number>;
 	let mockStorage: Storage;
 	const storageKey = "testKey";
 	const value = 42;
@@ -13,11 +13,12 @@ describe("DotStorage", () => {
 			removeItem: jest.fn(),
 			getItem: jest.fn().mockReturnValue(JSON.stringify(value)),
 		} as any;
+
 		storage = new DotStorage(value, storageKey, mockStorage, options);
 	});
 
 	it("should store value in storage", () => {
-		storage.newValue = 43;
+		storage.value = 43;
 		expect(mockStorage.setItem).toHaveBeenCalledWith(
 			storageKey,
 			JSON.stringify(43)
@@ -26,7 +27,7 @@ describe("DotStorage", () => {
 
 	it("should combine and set new options", () => {
 		const newOptions = { namespace: "value2", expiresAt: Date.now() + 2000 };
-		storage.newOptions = newOptions;
+		storage.options = newOptions;
 		expect(storage["options"]).toEqual({ ...options, ...newOptions });
 	});
 
