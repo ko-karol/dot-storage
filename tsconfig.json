@@ -1,17 +1,15 @@
 {
 	"include": [
 		"src/**/*",
-		"tests/**/*",
 	],
 	"compilerOptions": {
 		"lib": [
 			"ESNext",
 			"DOM"
 		],
-		"target": "ESNext",
-		"esModuleInterop": true,
-		"removeComments": true,
+		"target": "ES6",
 		"diagnostics": true,
+		"noImplicitAny": true,
 		"noImplicitReturns": true,
 		"strict": true,
 	}
