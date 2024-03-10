@@ -4,7 +4,9 @@ It encapsulates the complexity of serialization and deserialization, providing a
 
 ## Installation
 
-{ in progress }
+...coming soon.
+
+For now, you can install typescript and use the magic of ctrl + c, ctrl + v.
 
 ## Features
 - **Unified API**: Use the same methods regardless of whether you're using `localStorage` or `sessionStorage`.
