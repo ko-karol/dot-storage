@@ -1,47 +1,30 @@
-import IDotStorage from "./types/IDotStorage";
-import IOptions from "./types/IOptions";
+import {
+	DotStorageDefinition,
+	NamespaceManagerDefinition,
+	FuncArray,
+	StrArray,
+} from './types/index.ts';
 
-import StorageManager from "./StorageManager";
-import OptionsManager from "./OptionsManager";
-import ValueManager from "./ValueManager";
+import NamespaceManager from './NamespaceManager.ts';
 
-export default class DotStorage<Input> implements IDotStorage<Input> {
-	private _value: ValueManager<Input>;
-	private _storage: StorageManager<Input>;
-	private _options: OptionsManager;
+export default class DotStorage implements DotStorageDefinition {
+	private _namespaces: NamespaceManagerDefinition;
+	private _queue: FuncArray;
 
-	constructor(
-		value: Input,
-		storageKey: string,
-		storage: Storage,
-		options?: IOptions
-	) {
-		this._storage = new StorageManager(storage, storageKey);
-		this._options = new OptionsManager(options);
-		this._value = new ValueManager(value);
-		this.store();
+	constructor(namespaces?: StrArray) {
+		this._namespaces = new NamespaceManager(namespaces);
+		this._queue = [];
+	}
+	get namespaces() {
+		return Object(this._namespaces);
 	}
 
-	public set value(value: Input) {
-		this._value.setValue(value);
-		this.store();
+	get queue() {
+		return this._queue.map((func) => func.toString());
 	}
 
-	public set options(options: IOptions) {
-		const combinedOptions = { ...this._options, ...options };
-		this._options.setOptions(combinedOptions);
-		this.store();
-	}
-
-	public retrieve = (): Input | null => {
-		return this._storage.retrieveData();
-	};
-
-	public store = (): void => {
-		this._storage.storeData(this._value.value);
-	};
-
-	public clear = (): void => {
-		this._storage.clearData();
+	public send = () => {
+		this._queue.map((func) => func());
+		this._queue = [];
 	};
 }
