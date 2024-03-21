@@ -1,17 +1,26 @@
 {
 	"include": [
 		"src/**/*",
-		"tests/**/*",
 	],
 	"compilerOptions": {
+		"baseUrl": "",
+		"paths": {
+			"@/*": [
+				"src/*",
+				"types/*"
+			],
+		},
 		"lib": [
-			"ESNext",
+			"ES6",
 			"DOM"
 		],
-		"target": "ESNext",
-		"esModuleInterop": true,
-		"removeComments": true,
+		"target": "ES6",
 		"diagnostics": true,
+		"noImplicitAny": true,
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
 		"noImplicitReturns": true,
 		"strict": true,
 	}
