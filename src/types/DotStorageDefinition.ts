@@ -1,8 +1,9 @@
-import FuncArray from '@/types/FuncArray.ts';
+import { NamespaceManagerDefinition, StrArray } from './index.ts';
 
 export interface DotStorageDefinition {
-	namespaces: string[];
-	send(queue?: FuncArray): void;
+	get namespaces(): NamespaceManagerDefinition;
+	get queue(): StrArray;
+	send(): void;
 }
 
 export default DotStorageDefinition;
